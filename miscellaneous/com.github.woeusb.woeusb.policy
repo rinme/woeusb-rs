@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC "-//freedesktop//DTD polkit Policy Configuration 1.0//EN"
+ "http://www.freedesktop.org/software/polkit/policyconfig-1.dtd">
+<policyconfig>
+	<vendor>The WoeUSB Project</vendor>
+	<vendor_url>https://github.com/rinme/woeusb-rs</vendor_url>
+	<icon_name>woeusb-logo</icon_name>
+
+	<action id="com.github.woeusb.woeusb.pkexec">
+		<description>Run WoeUSB worker to flash USB storage device</description>
+		<description xml:lang="zh_TW">以超級使用者身份執行 WoeUSB 進行隨身碟寫入</description>
+		<description xml:lang="pl_PL">Uruchom proces roboczy WoeUSB jako root, aby zapisać urządzenie USB</description>
+		<description xml:lang="pt_BR">Execute o worker do WoeUSB como root para gravar o dispositivo USB</description>
+		<description xml:lang="de">WoeUSB-Arbeitsprozess als Root ausführen, um USB-Gerät zu beschreiben</description>
+		<description xml:lang="fr">Exécuter le processus WoeUSB en tant que root pour formater et écrire sur la clé USB</description>
+		
+		<message>Authentication is required to partition and format storage devices.</message>
+		<message xml:lang="zh_TW">對儲存裝置進行分割與格式化需要通過身份驗證。</message>
+		<message xml:lang="pl_PL">Wymagana jest autoryzacja do partycjonowania i formatowania urządzeń pamięci masowej.</message>
+		<message xml:lang="pt_BR">A autenticação é necessária para particionar e formatar dispositivos de armazenamento.</message>
+		<message xml:lang="de">Authentifizierung ist erforderlich, um Speichergeräte zu partitionieren und zu formatieren.</message>
+		<message xml:lang="fr">Une authentification est requise pour partitionner et formater les périphériques de stockage.</message>
+		
+		<defaults>
+			<allow_any>auth_admin</allow_any>
+			<allow_inactive>auth_admin</allow_inactive>
+			<allow_active>auth_admin_keep</allow_active>
+		</defaults>
+		
+		<annotate key="org.freedesktop.policykit.exec.path">/usr/local/bin/woeusb</annotate>
+	</action>
+</policyconfig>

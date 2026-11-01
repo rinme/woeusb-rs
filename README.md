@@ -1,93 +1,110 @@
 <div align="center">
-<h1>WoeUSB-ng</h1>
-<img src=".github/woeusb-logo.png" alt="brand" width="28%" />
+<h1>WoeUSB (Rust)</h1>
+<img src="src/WoeUSB/data/woeusb-logo.png" alt="WoeUSB logo" width="160" />
+<br />
+<em>A modern, safe, high-performance Linux application to create bootable Windows USB installers from ISO images or DVDs.</em>
 </div>
 
-_A Linux program to create a Windows USB stick installer from a real Windows DVD or image._
+---
 
-This package contains two programs:
+`woeusb-rs` is a complete rewrite of WoeUSB in Rust, architected with a decoupled core engine, a versatile CLI utility with simulation mode, and a native GNOME/Libadwaita desktop GUI.
 
-* **woeusb**: A command-line utility that enables you to create your own bootable Windows installation USB storage device from an existing Windows Installation disc or disk image
-* **woeusbgui**: Graphic version of woeusb
+## Highlights & Features
 
-Supported images:
+- **Blazing Fast & Efficient**: Native Rust disk inspection and buffered multi-megabyte chunked file transfer with real-time throughput metrics.
+- **Fail-Safe System Disk Protection**: Unconditionally verifies mount points and swap tables, preventing accidental destruction of your operating system (`/`, `/home`, etc.).
+- **Zero Runtime Internet Dependency**: Embedded Rufus `uefi-ntfs.img` partition image directly within the binary for offline NTFS UEFI booting.
+- **Automatic 4GiB Limit Handling**: Automatically detects when `install.wim` exceeds the FAT32 4GiB boundary and configures NTFS + UEFI:NTFS partitions.
+- **Modern Split Privilege Architecture**:
+  - Unprivileged **GTK4 / Libadwaita** GUI runs natively under Wayland and X11 as your normal desktop user.
+  - Privileged disk manipulation runs safely in a dedicated worker process authorized via **Polkit** (`pkexec`).
+- **Complete `--dry-run` Mode**: Test and verify the full partitioning and copying workflow without touching physical disks.
+- **Dual CLI Compatibility**: Modern subcommands (`flash`, `list`, `info`) alongside 100% backward compatibility for legacy WoeUSB scripts (`--device`, `--partition`).
 
-Windows Vista, Windows 7, Window 8.x, Windows 10. All languages and any version (home, pro...) and Windows PE are supported.
+---
 
-Supported bootmodes:
+## Installation & Building
 
-* Legacy/MBR-style/IBM PC compatible bootmode
-* Native UEFI booting is supported for Windows 7 and later images (limited to the FAT filesystem as the target)
+### Requirements
 
-This project rewrite of original [WoeUSB](https://github.com/slacka/WoeUSB) 
+- Linux OS with system tools: `parted`, `wipefs`, `dosfstools` (`mkfs.vfat`), `ntfs-3g` (`mkntfs`), `grub2-common` / `grub-pc-bin`, `7z` (`p7zip`)
+- Build dependencies: `rust` / `cargo` (1.80+), `gtk4`, `libadwaita-1`, `pkg-config`
 
-## Installation
+### Build from Source
 
-### Arch
-```shell
-yay -S woeusb-ng
+```bash
+# Build release binaries
+cargo build --release
+
+# Install binaries, desktop entry, and Polkit policy
+sudo make install
 ```
 
-### For other distributions
+---
 
-### 1. Install WoeUSB-ng's Dependencies
-#### Ubuntu
+## Command-Line Usage (`woeusb`)
 
-```shell
-sudo apt install git p7zip-full python3-pip python3-wxgtk4.0 grub2-common grub-pc-bin parted dosfstools ntfs-3g
+### 1. Flash a Windows ISO to a USB Drive
+
+```bash
+# Modern subcommand syntax
+sudo woeusb flash Win11_English_x64.iso /dev/sdb
+
+# With simulation / dry-run mode (safe to test)
+woeusb flash --dry-run Win11_English_x64.iso /dev/sdb
+
+# Specify custom volume label and skip legacy GRUB
+sudo woeusb flash --label "WIN11" --skip-grub Win11_English_x64.iso /dev/sdb
 ```
 
-#### Fedora (tested on: Fedora Workstation 33)
-```shell
-sudo dnf install git p7zip p7zip-plugins python3-pip python3-wxpython4
+### 2. List Connected Storage Devices
+
+```bash
+woeusb list
+
+# Include non-removable internal drives
+woeusb list --all
 ```
 
-### 2. Install WoeUSB-ng
-```shell
-sudo pip3 install WoeUSB-ng
+### 3. Inspect a Windows ISO Image
+
+```bash
+woeusb info Win11_English_x64.iso
 ```
 
-## Installation from source code
+### 4. Legacy Syntax Compatibility
 
-### 1. Install WoeUSB-ng's Build Dependencies
-#### Ubuntu
-```shell
-sudo apt install git p7zip-full python3-pip python3-wxgtk4.0 grub2-common grub-pc-bin parted dosfstools ntfs-3g
-```
-#### Arch
-```shell
-sudo pacman -Suy p7zip python-pip python-wxpython
-```
-#### Fedora (tested on: Fedora Workstation 33) 
-```shell
-sudo dnf install git p7zip p7zip-plugins python3-pip python3-wxpython4
-```
-### 2. Install WoeUSB-ng
-```shell
-git clone https://github.com/WoeUSB/WoeUSB-ng.git
-cd WoeUSB-ng
-sudo pip3 install .
+Existing scripts and commands continue to work out of the box:
+
+```bash
+sudo woeusb --device Win10.iso /dev/sdb
+sudo woeusb --partition Win10.iso /dev/sdb1
 ```
 
-## Installation from source code locally or in virtual environment 
-```shell
-git clone https://github.com/WoeUSB/WoeUSB-ng.git
-cd WoeUSB-ng
-git apply development.patch
-sudo pip3 install -e .
-```
-Please note that this will not create menu shortcut and you may need to run gui twice as it may want to adjust policy. 
+---
 
-## Uninstalling
+## Graphical User Interface (`woeusbgui`)
 
-To remove WoeUSB-ng completely run (needed only when using installation from source code):
-```shell
-sudo pip3 uninstall WoeUSB-ng
-sudo rm /usr/share/icons/WoeUSB-ng/icon.ico \
-    /usr/share/applications/WoeUSB-ng.desktop \
-    /usr/local/bin/woeusbgui
-sudo rmdir /usr/share/icons/WoeUSB-ng/
+Launch the modern Libadwaita interface from your application menu or run:
+
+```bash
+woeusbgui
 ```
+
+The GUI runs in user space and automatically requests Polkit privilege elevation when initiating the burn process.
+
+---
+
+## Architecture
+
+The project is organized as a Cargo workspace:
+
+- [`crates/woeusb-core`](crates/woeusb-core): Core library for drive detection, safety analysis, ISO inspection, file copy streaming, and partition orchestration.
+- [`crates/woeusb-cli`](crates/woeusb-cli): Terminal application (`woeusb`) with `indicatif` progress bars, safety prompts, and JSON-streaming worker mode.
+- [`crates/woeusb-gui`](crates/woeusb-gui): Native desktop GUI (`woeusbgui`) written in GTK4 + Libadwaita.
+
+---
 
 ## License
-WoeUSB-ng is distributed under the [GPL license](https://github.com/WoeUSB/WoeUSB-ng/blob/master/COPYING).
+
+Distributed under the terms of the [GNU General Public License v3 or later](COPYING).

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=WoeUSB
+Comment=Create bootable Windows USB storage device from ISO images or DVDs
+Exec=woeusbgui
+Icon=woeusb-logo
+Terminal=false
+Type=Application
+Categories=Utility;System;
+StartupNotify=true
