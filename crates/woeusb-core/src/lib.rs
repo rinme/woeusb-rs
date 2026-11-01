@@ -1,12 +1,16 @@
 pub mod assets;
+pub mod copier;
 pub mod device;
+pub mod engine;
 pub mod error;
 pub mod iso;
 pub mod models;
 pub mod safety;
 
 pub use assets::{get_uefi_ntfs_image, UEFI_NTFS_IMAGE};
+pub use copier::Copier;
 pub use device::{inspect_device, list_dvd_drives, list_usb_drives};
+pub use engine::Engine;
 pub use error::{Result, WoeError};
 pub use iso::{inspect_iso, inspect_mounted_dir, IsoMetadata, FAT32_MAX_FILE_SIZE};
 pub use models::*;
