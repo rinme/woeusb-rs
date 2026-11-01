@@ -1,0 +1,11 @@
+[package]
+name = "woeusb"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Command-line interface for woeusb-rs"
+
+[dependencies]
+woeusb-core = { path = "../woeusb-core" }

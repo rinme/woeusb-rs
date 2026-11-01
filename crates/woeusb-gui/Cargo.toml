@@ -1,0 +1,11 @@
+[package]
+name = "woeusbgui"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "GTK4 / Libadwaita GUI for woeusb-rs"
+
+[dependencies]
+woeusb-core = { path = "../woeusb-core" }

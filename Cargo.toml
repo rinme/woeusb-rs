@@ -1,0 +1,16 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/woeusb-core",
+    "crates/woeusb-cli",
+    "crates/woeusb-gui",
+]
+
+[workspace.package]
+version = "0.3.0"
+edition = "2021"
+authors = ["Jakub Szymański", "Rin Me", "Colin GILLE"]
+license = "GPL-3.0-or-later"
+repository = "https://github.com/rinme/woeusb-rs"
+homepage = "https://github.com/rinme/woeusb-rs"
+description = "A Linux program to create bootable Windows USB installers from ISO images or DVDs"
