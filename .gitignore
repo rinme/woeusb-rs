@@ -10,3 +10,6 @@ dist/
 build/
 
 create_tarball
+
+# Rust build artifacts
+target/
