@@ -3,7 +3,7 @@
 
 pkgname=woeusb-rs-git
 _pkgname=woeusb-rs
-pkgver=0.3.0.r0.gd19ac54
+pkgver=0.3.0.r0.g5da275f
 pkgrel=1
 pkgdesc="A modern, safe, high-performance Linux application to create bootable Windows USB installers from ISO images or DVDs (Rust rewrite of WoeUSB)"
 arch=('x86_64' 'aarch64')
@@ -51,4 +51,7 @@ check() {
 package() {
     cd "$startdir"
     make DESTDIR="$pkgdir" PREFIX=/usr POLKIT_DIR=/usr/share/polkit-1/actions install
+    # Arch pacman hooks manage desktop/icon caches dynamically; ensure no cache files leak into package
+    rm -f "$pkgdir"/usr/share/applications/mimeinfo.cache
+    rm -f "$pkgdir"/usr/share/icons/hicolor/icon-theme.cache
 }

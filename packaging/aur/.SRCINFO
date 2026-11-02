@@ -1,7 +1,7 @@
 pkgbase = woeusb-rs-git
 	pkgdesc = A modern, safe, high-performance Linux application to create bootable Windows USB installers from ISO images or DVDs (Rust rewrite of WoeUSB)
 	pkgver = 0.3.0.r0.gd19ac54
-	pkgrel = 1
+	pkgrel = 2
 	url = https://github.com/rinme/woeusb-rs
 	arch = x86_64
 	arch = aarch64

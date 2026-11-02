@@ -31,8 +31,10 @@ install: build
 	install -m 644 src/WoeUSB/data/woeusb-logo.png $(DESTDIR)$(DATADIR)/icons/hicolor/512x512/apps/woeusb-logo.png
 	install -d $(DESTDIR)$(POLKIT_DIR)
 	install -m 644 miscellaneous/com.github.woeusb.woeusb.policy $(DESTDIR)$(POLKIT_DIR)/
-	-which update-desktop-database >/dev/null 2>&1 && update-desktop-database -q $(DESTDIR)$(DATADIR)/applications || true
-	-which gtk-update-icon-cache >/dev/null 2>&1 && gtk-update-icon-cache -q -t -f $(DESTDIR)$(DATADIR)/icons/hicolor || true
+	@if [ -z "$(DESTDIR)" ]; then \
+		which update-desktop-database >/dev/null 2>&1 && update-desktop-database -q $(DATADIR)/applications || true; \
+		which gtk-update-icon-cache >/dev/null 2>&1 && gtk-update-icon-cache -q -t -f $(DATADIR)/icons/hicolor || true; \
+	fi
 
 uninstall:
 	rm -f $(DESTDIR)$(BINDIR)/woeusb
@@ -42,8 +44,10 @@ uninstall:
 	rm -f $(DESTDIR)$(DATADIR)/pixmaps/woeusb-logo.png
 	rm -f $(DESTDIR)$(DATADIR)/icons/hicolor/512x512/apps/woeusb-logo.png
 	rm -f $(DESTDIR)$(POLKIT_DIR)/com.github.woeusb.woeusb.policy
-	-which update-desktop-database >/dev/null 2>&1 && update-desktop-database -q $(DESTDIR)$(DATADIR)/applications || true
-	-which gtk-update-icon-cache >/dev/null 2>&1 && gtk-update-icon-cache -q -t -f $(DESTDIR)$(DATADIR)/icons/hicolor || true
+	@if [ -z "$(DESTDIR)" ]; then \
+		which update-desktop-database >/dev/null 2>&1 && update-desktop-database -q $(DATADIR)/applications || true; \
+		which gtk-update-icon-cache >/dev/null 2>&1 && gtk-update-icon-cache -q -t -f $(DATADIR)/icons/hicolor || true; \
+	fi
 
 arch-pkg:
 	makepkg -f
