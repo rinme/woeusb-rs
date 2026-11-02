@@ -13,3 +13,7 @@ create_tarball
 
 # Rust build artifacts
 target/
+
+# Arch Linux packaging artifacts
+*.pkg.tar.zst
+/pkg/

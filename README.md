@@ -23,21 +23,53 @@
 
 ---
 
-## Installation & Building
+## Installation
 
-### Requirements
+### 1. Arch Linux / CachyOS / Manjaro
 
-- Linux OS with system tools: `parted`, `wipefs`, `dosfstools` (`mkfs.vfat`), `ntfs-3g` (`mkntfs`), `grub2-common` / `grub-pc-bin`, `7z` (`p7zip`)
-- Build dependencies: `rust` / `cargo` (1.80+), `gtk4`, `libadwaita-1`, `pkg-config`
+#### Via AUR Helper (`paru` or `yay`):
+```bash
+paru -S woeusb-rs-git
+# or
+yay -S woeusb-rs-git
+```
 
-### Build from Source
+#### Manual Build with `makepkg` & `pacman`:
+```bash
+git clone https://github.com/rinme/woeusb-rs.git
+cd woeusb-rs
+makepkg -si
+```
+
+#### Uninstalling on Arch:
+```bash
+sudo pacman -R woeusb-rs-git
+```
+
+---
+
+### 2. Generic Linux Installation (From Source)
+
+#### Dependencies
+- Runtime utilities: `parted`, `wipefs`, `dosfstools` (`mkfs.vfat`), `ntfs-3g` (`mkntfs`), `grub2-common` / `grub-pc-bin`, `7z` (`p7zip`)
+- Build dependencies: `rust` / `cargo` (1.80+), `gtk4`, `libadwaita-1`, `pkg-config`, `make`
 
 ```bash
-# Build release binaries
-cargo build --release
+git clone https://github.com/rinme/woeusb-rs.git
+cd woeusb-rs
 
-# Install binaries, desktop entry, and Polkit policy
+# Compile release binaries
+make build
+# or: cargo build --release
+
+# Install binaries, desktop launcher, icons, and Polkit policy
 sudo make install
+```
+
+#### Uninstalling:
+To completely remove all installed binaries, desktop launchers, icon assets, and Polkit policies:
+```bash
+sudo make uninstall
 ```
 
 ---
@@ -50,7 +82,7 @@ sudo make install
 # Modern subcommand syntax
 sudo woeusb flash Win11_English_x64.iso /dev/sdb
 
-# With simulation / dry-run mode (safe to test)
+# With simulation / dry-run mode (safe to test without writing to disk)
 woeusb flash --dry-run Win11_English_x64.iso /dev/sdb
 
 # Specify custom volume label and skip legacy GRUB
@@ -102,6 +134,7 @@ The project is organized as a Cargo workspace:
 - [`crates/woeusb-core`](crates/woeusb-core): Core library for drive detection, safety analysis, ISO inspection, file copy streaming, and partition orchestration.
 - [`crates/woeusb-cli`](crates/woeusb-cli): Terminal application (`woeusb`) with `indicatif` progress bars, safety prompts, and JSON-streaming worker mode.
 - [`crates/woeusb-gui`](crates/woeusb-gui): Native desktop GUI (`woeusbgui`) written in GTK4 + Libadwaita.
+- [`packaging/aur`](packaging/aur): AUR-ready packaging files (`PKGBUILD`, `.SRCINFO`).
 
 ---
 
