@@ -10,6 +10,7 @@ description = "Command-line interface for woeusb-rs"
 [dependencies]
 woeusb-core = { path = "../woeusb-core" }
 clap = { version = "4.5", features = ["derive", "cargo"] }
+clap_complete = "4.5"
 indicatif = "0.17"
 anyhow = "1.0"
 tracing = "0.1"

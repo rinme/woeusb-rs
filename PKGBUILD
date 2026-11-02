@@ -3,7 +3,7 @@
 
 pkgname=woeusb-rs-git
 _pkgname=woeusb-rs
-pkgver=0.3.0.r0.g5da275f
+pkgver=0.3.0.r0.g65035d7
 pkgrel=1
 pkgdesc="A modern, safe, high-performance Linux application to create bootable Windows USB installers from ISO images or DVDs (Rust rewrite of WoeUSB)"
 arch=('x86_64' 'aarch64')
@@ -39,7 +39,7 @@ pkgver() {
 build() {
     cd "$startdir"
     export CARGO_TARGET_DIR="$startdir/target"
-    make PREFIX=/usr build
+    make PREFIX=/usr all
 }
 
 check() {

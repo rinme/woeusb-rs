@@ -1,4 +1,5 @@
 use clap::{Parser, Subcommand};
+use clap_complete::Shell;
 use std::path::PathBuf;
 
 #[derive(Parser, Debug)]
@@ -122,5 +123,16 @@ pub enum Commands {
         /// Path to Windows ISO image or optical drive
         #[arg(value_name = "SOURCE")]
         source: PathBuf,
+    },
+
+    /// Generate shell tab-completion script for Bash, Fish, or Zsh
+    Completions {
+        /// Shell to generate completions for
+        #[arg(value_enum)]
+        shell: Shell,
+
+        /// Binary name to generate completions for (e.g. woeusb, woeusb-ng)
+        #[arg(long, default_value = "woeusb")]
+        bin: String,
     },
 }

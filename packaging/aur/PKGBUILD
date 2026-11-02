@@ -40,7 +40,7 @@ pkgver() {
 
 build() {
     cd "$_pkgname"
-    make PREFIX=/usr build
+    make PREFIX=/usr all
 }
 
 check() {

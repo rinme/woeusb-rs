@@ -69,6 +69,11 @@ fn main() -> Result<()> {
                 let meta = inspect_iso(&source)?;
                 terminal::print_iso_info(&meta);
             }
+            args::Commands::Completions { shell, bin } => {
+                use clap::CommandFactory;
+                let mut cmd = args::Cli::command();
+                clap_complete::generate(shell, &mut cmd, bin, &mut std::io::stdout());
+            }
         }
     } else if let (Some(source), Some(target)) = (cli.source, cli.target) {
         // Legacy CLI compatibility mode
